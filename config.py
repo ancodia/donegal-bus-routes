@@ -15,10 +15,7 @@ graph_path = f"{ROOT_DIR}/graph"
 graph_graphml_path = f"{graph_path}/graphml"
 #############################
 
-########## GNN ##############
-gnn_path = f"{ROOT_DIR}/gnn"
-gnn_pickle_path = f"{gnn_path}/pickle"
-
-# paths to GNN train/test graph pickles
-train_graph = f"{gnn_path}/pickle/train_graph.gpickle"
+########## Route Planning ##############
+rp_path = f"{ROOT_DIR}/route_planning"
+rp_graphml_path = f"{rp_path}/graphml"
 #############################
