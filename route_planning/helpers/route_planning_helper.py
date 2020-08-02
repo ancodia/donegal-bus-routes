@@ -155,7 +155,62 @@ def assign_route_start_end_points(G, route_nodes, n_communities):
     return u_nodes, v_nodes
 
 
+def split_into_community_graphs(G):
+    nodes = ox.graph_to_gdfs(G, edges=False)
+    community_labels = list(nodes["community"].unique())
+
+    community_graphs = []
+    for label in community_labels:
+        community_nodes = []
+        for x, y in G.nodes(data=True):
+            if y["community"] == label:
+                community_nodes.append(x)
+        community_graph = G.subgraph(community_nodes)
+        community_graphs.append(community_graph)
+    return community_graphs
+
+
 def path_weight(G, path):
     # similar approach as used in networkx shortest_simple_paths
     # which does not accept multidigraphs
-    return sum(float(G.adj[u][v][0]["weight"]) for (u, v) in zip(path, path[1:]))
+    weight = sum(float(G.adj[u][v][0]["weight"]) for (u, v) in zip(path, path[1:]))
+    #print(f"weight: {weight} - {path}")
+    return weight
+
+
+def find_highest_weighted_simple_path(G):
+    start_node = None
+    end_node = None
+
+    nodes = ox.graph_to_gdfs(G, edges=False)
+    start_node = list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
+    end_node = list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
+    # for x, y in G.nodes(data=True):
+    #     if "route_flag" in y:
+    #         if y["route_flag"] == "1":
+    #             start_node = x
+    #         elif y["route_flag"] == "2":
+    #             end_node = x
+    #     if start_node is not None and end_node is not None:
+    #         break
+
+    paths = []
+    for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=60):
+        paths.append(path)
+
+    if len(paths) > 0:
+        highest_weighted_path = max((path for path in paths),
+                                    key=lambda path: path_weight(G, path))
+    else:
+        for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=100):
+            paths.append(path)
+
+        if len(paths) > 0:
+            highest_weighted_path = max((path for path in paths),
+                                        key=lambda path: path_weight(G, path))
+
+    # highest_weighted_path = max((path for path in
+    #                              nx.all_simple_paths(G, source=start_node,
+    #                                                  target=end_node, cutoff=70)),
+    #                             key=lambda path: path_weight(G, path))
+    return highest_weighted_path
