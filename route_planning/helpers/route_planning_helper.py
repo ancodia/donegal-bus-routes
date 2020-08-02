@@ -153,3 +153,9 @@ def assign_route_start_end_points(G, route_nodes, n_communities):
     assert len(u_nodes) == n_communities & len(v_nodes) == n_communities
 
     return u_nodes, v_nodes
+
+
+def path_weight(G, path):
+    # similar approach as used in networkx shortest_simple_paths
+    # which does not accept multidigraphs
+    return sum(float(G.adj[u][v][0]["weight"]) for (u, v) in zip(path, path[1:]))
