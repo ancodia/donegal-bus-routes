@@ -133,23 +133,23 @@ def find_furthest_apart_nodes(node_coordinates):
 def assign_route_start_end_points(G, route_nodes, n_communities):
     """
     Add a route_flag to the graph's nodes.
-    Then assign start (u) or end (v) flags to the nodes
+    Then assign start (1) or end (2) flags to the nodes
     found in route_nodes list of community dictionaries
     :param G:
     :param route_nodes:
     :return:
     """
     # add flags to start/end nodes for community routes
-    nx.set_node_attributes(G, None, "route_flag")
+    nx.set_node_attributes(G, 0, "route_flag")
 
     for community in route_nodes:
         dict = list(iter(community.values()))[0]
-        G.nodes[dict["u"]]["route_flag"] = "u"
-        G.nodes[dict["v"]]["route_flag"] = "v"
+        G.nodes[dict["u"]]["route_flag"] = 1
+        G.nodes[dict["v"]]["route_flag"] = 2
 
     # verify the expected number of start and end points were added
-    u_nodes = [y for x, y in G.nodes(data=True) if y["route_flag"] == "u"]
-    v_nodes = [y for x, y in G.nodes(data=True) if y["route_flag"] == "v"]
+    u_nodes = [y for x, y in G.nodes(data=True) if y["route_flag"] == 1]
+    v_nodes = [y for x, y in G.nodes(data=True) if y["route_flag"] == 2]
     assert len(u_nodes) == n_communities & len(v_nodes) == n_communities
 
     return u_nodes, v_nodes
