@@ -194,23 +194,23 @@ def find_highest_weighted_simple_path(G):
     #     if start_node is not None and end_node is not None:
     #         break
 
-    paths = []
-    for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=60):
-        paths.append(path)
+    # paths = []
+    # for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=70):
+    #     paths.append(path)
+    #
+    # if len(paths) > 0:
+    #     highest_weighted_path = max((path for path in paths),
+    #                                 key=lambda path: path_weight(G, path))
+    # else:
+    #     for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=110):
+    #         paths.append(path)
+    #
+    #     if len(paths) > 0:
+    #         highest_weighted_path = max((path for path in paths),
+    #                                     key=lambda path: path_weight(G, path))
 
-    if len(paths) > 0:
-        highest_weighted_path = max((path for path in paths),
-                                    key=lambda path: path_weight(G, path))
-    else:
-        for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=100):
-            paths.append(path)
-
-        if len(paths) > 0:
-            highest_weighted_path = max((path for path in paths),
-                                        key=lambda path: path_weight(G, path))
-
-    # highest_weighted_path = max((path for path in
-    #                              nx.all_simple_paths(G, source=start_node,
-    #                                                  target=end_node, cutoff=70)),
-    #                             key=lambda path: path_weight(G, path))
+    highest_weighted_path = max((path for path in
+                                 nx.all_simple_paths(G, source=start_node,
+                                                     target=end_node, cutoff=90)),
+                                key=lambda path: path_weight(G, path))
     return highest_weighted_path
