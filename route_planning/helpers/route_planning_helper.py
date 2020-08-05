@@ -178,7 +178,7 @@ def path_weight(G, path):
     return weight
 
 
-def find_highest_weighted_simple_path(G):
+def find_highest_weighted_simple_path(G, cutoff=90):
     start_node = None
     end_node = None
 
@@ -211,6 +211,6 @@ def find_highest_weighted_simple_path(G):
 
     highest_weighted_path = max((path for path in
                                  nx.all_simple_paths(G, source=start_node,
-                                                     target=end_node, cutoff=90)),
+                                                     target=end_node, cutoff=cutoff)),
                                 key=lambda path: path_weight(G, path))
     return highest_weighted_path
