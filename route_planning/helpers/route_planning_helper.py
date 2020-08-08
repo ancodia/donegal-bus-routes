@@ -1,6 +1,7 @@
 from itertools import count
 import networkx as nx
 import osmnx as ox
+import pandas as pd
 
 
 def assign_community_labels(G, labels):
@@ -179,38 +180,39 @@ def path_weight(G, path):
 
 
 def find_highest_weighted_simple_path(G, cutoff=90):
-    start_node = None
-    end_node = None
-
     nodes = ox.graph_to_gdfs(G, edges=False)
     start_node = list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
     end_node = list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
-    # for x, y in G.nodes(data=True):
-    #     if "route_flag" in y:
-    #         if y["route_flag"] == "1":
-    #             start_node = x
-    #         elif y["route_flag"] == "2":
-    #             end_node = x
-    #     if start_node is not None and end_node is not None:
-    #         break
-
-    # paths = []
-    # for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=70):
-    #     paths.append(path)
-    #
-    # if len(paths) > 0:
-    #     highest_weighted_path = max((path for path in paths),
-    #                                 key=lambda path: path_weight(G, path))
-    # else:
-    #     for path in nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=110):
-    #         paths.append(path)
-    #
-    #     if len(paths) > 0:
-    #         highest_weighted_path = max((path for path in paths),
-    #                                     key=lambda path: path_weight(G, path))
 
     highest_weighted_path = max((path for path in
                                  nx.all_simple_paths(G, source=start_node,
                                                      target=end_node, cutoff=cutoff)),
                                 key=lambda path: path_weight(G, path))
     return highest_weighted_path
+
+
+def plot_community_bus_routes(G):
+    nodes, edges = ox.graph_to_gdfs(G)
+    # get nodes that are on the routes
+    # and create a graph containing only those
+    route_nodes = nodes[(nodes["community_route"])]
+    route_nodes_graph = ox.graph_from_gdfs(route_nodes, edges)
+
+    # convert community labels to integers so that get_node_colors_by_attr
+    # can use the community attribute
+    for x, y in route_nodes_graph.nodes(data=True):
+        if "community" in y:
+            y["community"] = int(y["community"])
+
+    node_colours = ox.plot.get_node_colors_by_attr(route_nodes_graph,
+                                                   attr="community",
+                                                   cmap="tab20")
+
+    # graph_from_gdfs creates empty nodes so need
+    # to update node_colours to include those so
+    # that plot graph function will work correctly
+    other_nodes = {x: (0, 0, 0, 0) for x, y in G.nodes(data=True) if x not in node_colours.index}
+    series = pd.Series(other_nodes)
+    node_colours = node_colours.append(series)
+
+    ox.plot_graph(route_nodes_graph, node_color=node_colours, node_size=15)
