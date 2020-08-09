@@ -219,7 +219,7 @@ def plot_community_bus_routes(G):
     ox.plot_graph(route_nodes_graph, node_color=node_colours, edge_color="w", node_size=15)
 
 
-def plot_community_graph(nodes_df, edges_df):
+def plot_community_graph(nodes_df, edges_df, nodes_cmap="hsv", node_size=100):
     fig = plt.figure(figsize=(20, 20))
     ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
     ax.set_facecolor("black")
@@ -240,9 +240,9 @@ def plot_community_graph(nodes_df, edges_df):
     nodes_df.plot(
         ax=ax,
         marker="o",
-        markersize=100,
+        markersize=node_size,
         column="community",
-        cmap="hsv",
+        cmap=nodes_cmap,
         zorder=1,
         legend=True,
         categorical=True,
