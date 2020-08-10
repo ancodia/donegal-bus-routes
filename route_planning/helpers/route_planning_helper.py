@@ -2,6 +2,7 @@ from itertools import count
 import networkx as nx
 import osmnx as ox
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
@@ -180,10 +181,10 @@ def path_weight(G, path):
     return weight
 
 
-def find_highest_weighted_simple_path(G, cutoff=90):
+def find_highest_weighted_simple_path(G, cutoff=90, start_node=None, end_node=None):
     nodes = ox.graph_to_gdfs(G, edges=False)
-    start_node = list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
-    end_node = list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
+    start_node = start_node if start_node is not None else list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
+    end_node = end_node if end_node is not None else list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
 
     highest_weighted_path = max((path for path in
                                  nx.all_simple_paths(G, source=start_node,
@@ -219,7 +220,11 @@ def plot_community_bus_routes(G):
     ox.plot_graph(route_nodes_graph, node_color=node_colours, edge_color="w", node_size=15)
 
 
-def plot_community_graph(nodes_df, edges_df, nodes_cmap="hsv", node_size=100):
+def plot_community_graph(nodes_df,
+                         edges_df,
+                         nodes_cmap="hsv",
+                         node_size=100,
+                         legend=True):
     fig = plt.figure(figsize=(20, 20))
     ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
     ax.set_facecolor("black")
@@ -227,25 +232,33 @@ def plot_community_graph(nodes_df, edges_df, nodes_cmap="hsv", node_size=100):
     plt.rc("legend", fontsize=25,
            facecolor="black")
 
-    # ax.add_image(imagery, 12, alpha=0.5)
     edges_df.plot(
         ax=ax,
         edgecolor="grey",
         linewidth=1,
         facecolor="none",
-        zorder=2,
-        alpha=0.8,
+        zorder=1,
+        alpha=0.8
     )
 
-    nodes_df.plot(
+    # new_cmap = rand_cmap(len(np.unique(nodes_df["community"].values)),
+    #                      type='bright',
+    #                      first_color_black=False,
+    #                      last_color_black=False,
+    #                      verbose=False)
+    ax = nodes_df.plot(
         ax=ax,
         marker="o",
         markersize=node_size,
         column="community",
         cmap=nodes_cmap,
-        zorder=1,
-        legend=True,
-        categorical=True,
+        zorder=2,
+        legend=legend,
+        categorical=True
     )
 
-    leg_colour = plt.setp(ax.get_legend().get_texts(), color='w')
+    if legend:
+        # set text colour to white
+        leg_colour = plt.setp(ax.get_legend().get_texts(), color='w')
+
+    return fig, ax
