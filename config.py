@@ -19,3 +19,10 @@ graph_graphml_path = f"{graph_path}/graphml"
 rp_path = f"{ROOT_DIR}/route_planning"
 rp_graphml_path = f"{rp_path}/graphml"
 #############################
+
+########## Testing #####################
+testing_path = f"{ROOT_DIR}/testing"
+testing_graphml_path = f"{testing_path}/graphml"
+testing_data_path = f"{testing_path}/data"
+
+########################################
