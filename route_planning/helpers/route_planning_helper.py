@@ -241,11 +241,6 @@ def plot_community_graph(nodes_df,
         alpha=0.8
     )
 
-    # new_cmap = rand_cmap(len(np.unique(nodes_df["community"].values)),
-    #                      type='bright',
-    #                      first_color_black=False,
-    #                      last_color_black=False,
-    #                      verbose=False)
     ax = nodes_df.plot(
         ax=ax,
         marker="o",
