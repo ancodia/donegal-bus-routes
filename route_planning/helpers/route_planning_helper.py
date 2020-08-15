@@ -174,10 +174,10 @@ def split_into_community_graphs(G):
     return community_graphs
 
 
-def path_weight(G, path):
+def path_weight(G, path, weight="weight"):
     # similar approach as used in networkx shortest_simple_paths
     # which does not accept multidigraphs
-    weight = sum(float(G.adj[u][v][0]["weight"]) for (u, v) in zip(path, path[1:]))
+    weight = sum(float(G.adj[u][v][0][weight]) for (u, v) in zip(path, path[1:]))
     return weight
 
 
