@@ -26,6 +26,4 @@ This project can be built as a Docker image so that the included Jupyter noteboo
   docker run -p 8888:8888 donegal-bus-routes
   ```
 
-- In a web browser go to:
-
-  http://localhost:8888
+- Open the link found in the Docker terminal window like: http://127.0.0.1:8888/?token=...
