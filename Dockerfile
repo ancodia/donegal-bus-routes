@@ -34,6 +34,9 @@ RUN pip3 install numpy
 RUN pip3 install cython
 RUN pip3 install -r requirements.txt
 
+# add project to sys.path so modules can be found for notebook imports
+ENV PYTHONPATH "${PYTHONPATH}:/donegal-bus-routes"
+
 # Setting Jupyter notebook configurations
 RUN jupyter notebook --generate-config --allow-root
 #RUN echo "c.NotebookApp.password = u'sha1:6a3f528eec40:6e896b6e4828f525a6e20e5411cd1c8075d68619'" >> /root/.jupyter/jupyter_notebook_config.py
