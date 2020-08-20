@@ -1,13 +1,16 @@
-from itertools import count
 import networkx as nx
 import osmnx as ox
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
 
 def assign_community_labels(G, labels):
+    """
+    Add a community attribute to a graph's nodes and assign the list of community labels
+    :param G: NetworkX Multidigraph
+    :param labels: list of community labels
+    """
     nx.set_node_attributes(G, 0, "community")
     i = 0
     for node in G.nodes:
@@ -16,6 +19,10 @@ def assign_community_labels(G, labels):
 
 
 def convert_edge_weights_to_floats(G):
+    """
+    OSMnx to GraphML saves edge weights as strings, this function converts them to floats
+    :param G: NetworkX Multidigraph
+    """
     weight_attributes = nx.get_edge_attributes(G, "weight")
 
     weight_attributes = dict([k, {"weight": float(v)}]
@@ -25,6 +32,12 @@ def convert_edge_weights_to_floats(G):
 
 
 def get_n_highest_ranked_nodes_in_community(community_df, n=10):
+    """
+    Label the n highest ranks nodes in the community Dataframe
+    :param community_df: Dataframe containing one community
+    :param n: Number of top ranked nodes to retrieve
+    :return:
+    """
     # get node ids of n highest ranked nodes
     top_n = list(community_df.nlargest(n, "rank")["osmid"].index)
 
@@ -48,7 +61,8 @@ def greatest_distance_between_top_ranked_nodes(G, community_labels):
     """
     From the top n nodes in each community,
     find the pair of points that have the greatest distance between them
-    :param G:
+    :param G: NetworkX Multidigraph
+    :param community_labels: list of the communities to include
     :return:
     """
     # get lists of the top ranked nodes in each community
@@ -66,6 +80,12 @@ def greatest_distance_between_top_ranked_nodes(G, community_labels):
 
 
 def get_top_n_ranked_nodes_per_community(G, community_labels):
+    """
+    Get nodes from the list of communities that have a top_n attribute assigned
+    :param G: NetworkX Multidigraph
+    :param community_labels: list of the communities to include
+    :return:
+    """
     # get the ranks of the graph's nodes
     ranks = nx.get_node_attributes(G, "top_n")
     # get unique ranks
@@ -86,8 +106,8 @@ def get_top_n_ranked_nodes_per_community(G, community_labels):
 def get_node_coordinates(G, communities_nodes):
     """
     Get the latitude/longitude coordinates for nodes in a list of community dictionaries
-    :param G:
-    :param communities_nodes:
+    :param G: NetworkX Multidigraph
+    :param communities_nodes: list of the communities to include
     :return:
     """
     # get coordinates of nodes
@@ -108,6 +128,11 @@ def get_node_coordinates(G, communities_nodes):
 
 
 def find_furthest_apart_nodes(node_coordinates):
+    """
+    Get the pairs of nodes that are the greatest distance apart
+    :param node_coordinates: list of dictionaries
+    :return:
+    """
     max_distances = []
     # check distance between points
     for coordinates_dict in node_coordinates:
@@ -139,8 +164,10 @@ def assign_route_start_end_points(G, route_nodes, n_communities):
     Add a route_flag to the graph's nodes.
     Then assign start (1) or end (2) flags to the nodes
     found in route_nodes list of community dictionaries
-    :param G:
+    :param G: NetworkX Multidigraph
     :param route_nodes:
+    :param n_communities: number of communities,
+    to check that the correct number of route nodes assigned
     :return:
     """
     # add flags to start/end nodes for community routes

@@ -9,7 +9,8 @@ def extract_county_townlands_from_source_data(county_abbr="DL"):
     Filter source population data to extract:
         - Donegal townland addresses
         - 2016 census totals
-    :return:
+    :param county_abbr: 2 letter Irish county abbreviation
+    :return: Dataframe containing county townland records (2016)
     """
     # load excel data
     population_data = load_workbook(
@@ -29,6 +30,11 @@ def extract_county_townlands_from_source_data(county_abbr="DL"):
 
 
 def extract_lat_long_from_nominatim(address):
+    """
+    Query OSM Nominatim API for the latitude and longitude coordinates of address
+    :param address: String
+    :return: lat, lng
+    """
     lat, lng = None, None
     nominatim = Nominatim()
     area = nominatim.query(address)
@@ -54,7 +60,9 @@ def extract_lat_long_from_nominatim(address):
 def lookup_osm_coordinates(row, column):
     """
     Lookup address with OpenStreetMap API to get central latitude and longitude values
-    :return:
+    :param row: Dataframe row
+    :param column: Address column
+    :return: Dataframe row w/ lat and lng
     """
     address_value = row[column]
     address_lat, address_lng = extract_lat_long_from_nominatim(address_value)

@@ -1,3 +1,5 @@
+import networkx as nx
+import route_planning.helpers.route_planning_helper as route_helper
 
 
 def get_path_of_route(df):
@@ -8,6 +10,25 @@ def get_path_of_route(df):
 
     df_filtered = df[df["trip_id"] == trip_id]
     return df_filtered[["route_id", "stop_id", "stop_sequence"]]
+
+
+def find_shortest_path_to_destinations(G,
+                                       source,
+                                       destinations,
+                                       weight="length",
+                                       print_all=True):
+    shortest_path = None
+    shortest_path_weight = None
+
+    for dest in destinations:
+        for path in nx.all_shortest_paths(G, source, dest, weight=weight):
+            path_weight = route_helper.path_weight(G, path, weight=weight)
+            if print_all: print(f"{path_weight} - {path}")
+            if shortest_path_weight is None or \
+                    path_weight < shortest_path_weight:
+                shortest_path = path
+                shortest_path_weight = path_weight
+    return shortest_path, shortest_path_weight
 
 
 def sample_size(population_size, margin_error=.05, confidence_level=.99, sigma=1/2):
