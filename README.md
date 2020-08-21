@@ -2,22 +2,12 @@
 
 This project can be built as a Docker image so that the included Jupyter notebooks can be inspected and run as follows:
 
-- Clone the repository:
+Prerequisites: Docker (https://www.docker.com/get-started)
+
+- Clone the repository and build the Docker image:
   ```
   git clone https://github.com/ancodia/donegal-bus-routes.git
-  ```
-
-- Download and install Docker: 
-
-  https://www.docker.com/get-started
-
-- Change to the donegal-bus-routes project directory:
-  ```
-  cd project_dir
-  ```
-
-- Build the Docker image:
-  ```
+  cd donegal-bus-routes
   docker build -t donegal-bus-routes .
   ```
 
