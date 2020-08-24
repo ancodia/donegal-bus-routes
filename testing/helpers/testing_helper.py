@@ -3,6 +3,11 @@ import route_planning.helpers.route_planning_helper as route_helper
 
 
 def get_path_of_route(df):
+    """
+    From the Dataframe containing GTFS trip data,
+    find the highest stop_sequence, the first trip that contains that sequence
+    and get all other stops on that trip to return the path taken
+    """
     max_number_stops = df["stop_sequence"].max()
 
     # get trip_id of first occurence of the max sequence value
@@ -17,6 +22,10 @@ def find_shortest_path_to_destinations(G,
                                        destinations,
                                        weight="length",
                                        print_all=True):
+    """
+    Find Dijkstra's shortest path and the length of the path
+    between the given source and destinations in graph G
+    """
     shortest_path = None
     shortest_path_weight = None
 

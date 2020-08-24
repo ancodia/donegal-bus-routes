@@ -8,7 +8,7 @@ import cartopy.crs as ccrs
 def assign_community_labels(G, labels):
     """
     Add a community attribute to a graph's nodes and assign the list of community labels
-    :param G: NetworkX Multidigraph
+    :param G: NetworkX.Multidigraph
     :param labels: list of community labels
     """
     nx.set_node_attributes(G, 0, "community")
@@ -21,7 +21,7 @@ def assign_community_labels(G, labels):
 def convert_edge_weights_to_floats(G):
     """
     OSMnx to GraphML saves edge weights as strings, this function converts them to floats
-    :param G: NetworkX Multidigraph
+    :param G: NetworkX.Multidigraph
     """
     weight_attributes = nx.get_edge_attributes(G, "weight")
 
@@ -61,7 +61,7 @@ def greatest_distance_between_top_ranked_nodes(G, community_labels):
     """
     From the top n nodes in each community,
     find the pair of points that have the greatest distance between them
-    :param G: NetworkX Multidigraph
+    :param G: NetworkX.Multidigraph
     :param community_labels: list of the communities to include
     :return:
     """
@@ -82,7 +82,7 @@ def greatest_distance_between_top_ranked_nodes(G, community_labels):
 def get_top_n_ranked_nodes_per_community(G, community_labels):
     """
     Get nodes from the list of communities that have a top_n attribute assigned
-    :param G: NetworkX Multidigraph
+    :param G: NetworkX.Multidigraph
     :param community_labels: list of the communities to include
     :return:
     """
@@ -106,7 +106,7 @@ def get_top_n_ranked_nodes_per_community(G, community_labels):
 def get_node_coordinates(G, communities_nodes):
     """
     Get the latitude/longitude coordinates for nodes in a list of community dictionaries
-    :param G: NetworkX Multidigraph
+    :param G: NetworkX.Multidigraph
     :param communities_nodes: list of the communities to include
     :return:
     """
@@ -164,7 +164,7 @@ def assign_route_start_end_points(G, route_nodes, n_communities):
     Add a route_flag to the graph's nodes.
     Then assign start (1) or end (2) flags to the nodes
     found in route_nodes list of community dictionaries
-    :param G: NetworkX Multidigraph
+    :param G: NetworkX.Multidigraph
     :param route_nodes:
     :param n_communities: number of communities,
     to check that the correct number of route nodes assigned
@@ -187,6 +187,12 @@ def assign_route_start_end_points(G, route_nodes, n_communities):
 
 
 def split_into_community_graphs(G):
+    """
+    Create a sub-graph for each unique community node attribute.
+    return a list of all community graphs
+    :param G: NetworkX.Multidigraph
+    :return: community_graphs: list(NetworkX.Multidigraph)
+    """
     nodes = ox.graph_to_gdfs(G, edges=False)
     community_labels = list(nodes["community"].unique())
 
@@ -202,6 +208,13 @@ def split_into_community_graphs(G):
 
 
 def path_weight(G, path, weight="weight"):
+    """
+    Calculate the weight of the provided path through graph G
+    :param G: NetworkX.Multidigraph
+    :param path: list of node IDs
+    :param weight: the edge attribute to calculate path weight with
+    :return:
+    """
     # similar approach as used in networkx shortest_simple_paths
     # which does not accept multidigraphs
     weight = sum(float(G.adj[u][v][0][weight]) for (u, v) in zip(path, path[1:]))
@@ -209,6 +222,15 @@ def path_weight(G, path, weight="weight"):
 
 
 def find_highest_weighted_simple_path(G, cutoff=90, start_node=None, end_node=None):
+    """
+    Calculate the simple path with the highest sum of edge weights between
+    start_node and end_node in graph G
+    :param G: NetworkX.Multidigraph
+    :param cutoff: stop all simple path search at this depth
+    :param start_node: node ID to start search
+    :param end_node: node ID of search destination
+    :return:
+    """
     nodes = ox.graph_to_gdfs(G, edges=False)
     start_node = start_node if start_node is not None else list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
     end_node = end_node if end_node is not None else list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
