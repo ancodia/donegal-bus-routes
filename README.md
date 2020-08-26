@@ -2,7 +2,7 @@
 
 This project can be built as a Docker image so that the included Jupyter notebooks can be inspected and run as follows:
 
-Prerequisites: Docker (https://www.docker.com/get-started)
+Prerequisites: Install Docker (https://www.docker.com/get-started)
 
 - Clone the repository and build the Docker image:
   ```
