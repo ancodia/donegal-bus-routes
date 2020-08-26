@@ -17,7 +17,7 @@ Prerequisites: Install Docker (https://www.docker.com/get-started)
   ```
   docker run -v $(pwd):/donegal-bus-routes -p 8888:8888 donegal-bus-routes
   ```
-  Windows (untested):
+  Windows cmd (untested):
   ```
   docker run -v %cd%:/donegal-bus-routes -p 8888:8888 donegal-bus-routes
   ```
