@@ -1,5 +1,5 @@
 # Graph Analytics for Rural Bus Route Planning
----
+
 ## Abstract
 Rural areas are attractive due to their green, open spaces and affordable housing. Recently, increasing possibilities to work from home are making rural living more feasible for many individuals. These regions, however, often lack adequate public transport offerings causing mobility-related exclusion and an over-reliance on cars for transport. Dependence on personal transport is a major contributor to greenhouse gas emissions. This study aims to address these issues by investigating if accessibility to rural public transport can be improved by using graph analytics for bus route planning. The road network of Donegal is used as the study region for conducting this research.
 
@@ -8,7 +8,7 @@ After reviewing literature on graph theory, several graph-based algorithms were 
 The results observed indicate this approach could be applied to improve bus services in rural settings to benefit inhabitants, transport operators and the environment. Future directions for research in this field could incorporate machine learning methods to dynamically create timetables and deploy additional buses when required.
 
 ---
-### Jupyter Notebook Sequence:
+### Jupyter Notebook Sequence
 - Graph Creation:
   
   1. [Create Graph](https://github.com/ancodia/donegal-bus-routes/blob/master/graph/notebooks/create_graph.ipynb)
@@ -27,6 +27,8 @@ The results observed indicate this approach could be applied to improve bus serv
   2. [Prepare Test Graph](https://github.com/ancodia/donegal-bus-routes/blob/master/testing/notebooks/prepare_test_graph.ipynb)
   3. [Testing](https://github.com/ancodia/donegal-bus-routes/blob/master/testing/notebooks/testing.ipynb)
 ---
+
+### Docker
 This project can be built as a Docker image so that the included Jupyter notebooks can be inspected and run as follows:
 
 Prerequisites: Install Docker (https://www.docker.com/get-started)
@@ -40,11 +42,11 @@ Prerequisites: Install Docker (https://www.docker.com/get-started)
 
 - Run a container, mounting the project directory:
   
-  Linux:
+  - Linux:
   ```
   docker run -v $(pwd):/donegal-bus-routes -p 8888:8888 donegal-bus-routes
   ```
-  Windows cmd (untested):
+  - Windows cmd (untested):
   ```
   docker run -v %cd%:/donegal-bus-routes -p 8888:8888 donegal-bus-routes
   ```
