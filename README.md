@@ -44,11 +44,11 @@ Prerequisites: Install Docker (https://www.docker.com/get-started)
   
   - Linux:
   ```
-  docker run -v $(pwd):/donegal-bus-routes -p 8888:8888 donegal-bus-routes
+  docker run --rm -v $(pwd):/donegal-bus-routes -p 8888:8888 donegal-bus-routes
   ```
   - Windows cmd (untested):
   ```
-  docker run -v %cd%:/donegal-bus-routes -p 8888:8888 donegal-bus-routes
+  docker run --rm -v %cd%:/donegal-bus-routes -p 8888:8888 donegal-bus-routes
   ```
   
 - Open the link found in the Docker terminal window like: http://127.0.0.1:8888/?token=...
