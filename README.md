@@ -29,11 +29,11 @@ The results observed indicate this approach could be applied to improve bus serv
 ---
 
 ### Docker
-This project can be built as a Docker container so that the included Jupyter notebooks can be inspected and run as follows:
+This project can be built as a Docker image so that the included Jupyter notebooks can be inspected and run as follows:
 
 Prerequisites: Install Docker (https://www.docker.com/get-started)
 
-- Clone the repository and build the Docker container:
+- Clone the repository and build the Docker image:
   ```
   git clone https://github.com/ancodia/donegal-bus-routes.git
   cd donegal-bus-routes
