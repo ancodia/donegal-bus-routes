@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.0  # check latest at github.com/astral-sh/ruff-pre-commit
+    hooks:
+      - id: ruff
+        args: [--fix]        # auto-fix what it can
+        exclude: \.ipynb$
+      - id: ruff-format      # replaces Black
+
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright
+        entry: pyright
+        language: system
+        types: [python]
+        pass_filenames: false  # pyright works better on the whole project
+        exclude: \.ipynb$
+
