@@ -25,6 +25,9 @@ dependencies = [
     "uvicorn>=0.41.0",
 ]
 
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py311"
@@ -39,6 +42,7 @@ pythonVersion = "3.11"
 typeCheckingMode = "basic"  # or "standard" / "strict"
 venvPath = "."
 venv = ".venv"
+include = ["src"]
 exclude = [
     "**/node_modules",
     "**/__pycache__",

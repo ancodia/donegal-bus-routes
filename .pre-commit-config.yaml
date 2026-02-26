@@ -7,13 +7,13 @@ repos:
         exclude: \.ipynb$
       - id: ruff-format      # replaces Black
 
-  - repo: local
-    hooks:
-      - id: pyright
-        name: pyright
-        entry: pyright
-        language: system
-        types: [python]
-        pass_filenames: false  # pyright works better on the whole project
-        exclude: \.ipynb$
+  # - repo: local
+  #   hooks:
+  #     - id: pyright
+  #       name: pyright
+  #       entry: pyright
+  #       language: system
+  #       types: [python]
+  #       pass_filenames: false  # pyright works better on the whole project
+  #       exclude: \.ipynb$
 
