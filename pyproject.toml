@@ -1,0 +1,42 @@
+[project]
+name = "donegal-bus-routes"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.133.0",
+    "geopandas>=1.1.2",
+    "jupyter>=1.1.1",
+    "networkx>=3.6.1",
+    "osmnx>=2.1.0",
+    "pandas>=3.0.1",
+    "pre-commit>=4.5.1",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.13.1",
+    "pyright>=1.1.408",
+    "ruff>=0.15.2",
+    "scikit-learn>=1.8.0",
+    "uvicorn>=0.41.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]   # pycodestyle, pyflakes, isort, pyupgrade
+# add "B" for bugbear, "S" for bandit security checks, etc.
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"  # or "standard" / "strict"
+venvPath = "."
+venv = ".venv"
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.*",
+    "**/*.ipynb"
+]

@@ -1,6 +1,7 @@
 import pandas as pd
 from openpyxl import load_workbook
 from OSMPythonTools.nominatim import Nominatim
+
 import config
 
 
@@ -13,8 +14,7 @@ def extract_county_townlands_from_source_data(county_abbr="DL"):
     :return: Dataframe containing county townland records (2016)
     """
     # load excel data
-    population_data = load_workbook(
-        "../../data/population/COP2016_Townlands.xlsx")
+    population_data = load_workbook("../../data/population/COP2016_Townlands.xlsx")
 
     # convert to pandas dataframe, set first row as header
     df = pd.DataFrame(population_data.worksheets[0].values).T.set_index(0).T
@@ -52,8 +52,8 @@ def extract_lat_long_from_nominatim(address):
                 break
         lat = json_item["lat"]
         lng = json_item["lon"]
-    except:
-        pass
+    except Exception as e:
+        print(f"Error extracting lat/lng for address: {address}, error: {e}")
     return lat, lng
 
 

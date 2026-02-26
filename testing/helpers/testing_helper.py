@@ -1,4 +1,5 @@
 import networkx as nx
+
 import route_planning.helpers.route_planning_helper as route_helper
 
 
@@ -17,11 +18,9 @@ def get_path_of_route(df):
     return df_filtered[["route_id", "stop_id", "stop_sequence"]]
 
 
-def find_shortest_path_to_destinations(G,
-                                       source,
-                                       destinations,
-                                       weight="length",
-                                       print_all=True):
+def find_shortest_path_to_destinations(
+    G, source, destinations, weight="length", print_all=True
+):
     """
     Find Dijkstra's shortest path and the length of the path
     between the given source and destinations in graph G
@@ -32,15 +31,15 @@ def find_shortest_path_to_destinations(G,
     for dest in destinations:
         for path in nx.all_shortest_paths(G, source, dest, weight=weight):
             path_weight = route_helper.path_weight(G, path, weight=weight)
-            if print_all: print(f"{path_weight} - {path}")
-            if shortest_path_weight is None or \
-                    path_weight < shortest_path_weight:
+            if print_all:
+                print(f"{path_weight} - {path}")
+            if shortest_path_weight is None or path_weight < shortest_path_weight:
                 shortest_path = path
                 shortest_path_weight = path_weight
     return shortest_path, shortest_path_weight
 
 
-def sample_size(population_size, margin_error=.05, confidence_level=.99, sigma=1/2):
+def sample_size(population_size, margin_error=0.05, confidence_level=0.99, sigma=1 / 2):
     """
     From: https://github.com/shawnohare/samplesize/blob/master/samplesize.py
     Calculate the minimal sample size to use to achieve a certain
@@ -70,24 +69,25 @@ def sample_size(population_size, margin_error=.05, confidence_level=.99, sigma=1
     # a normal distribution object in scipy.stats.
     # Here, ppf is the percentile point function.
     zdict = {
-        .90: 1.645,
-        .91: 1.695,
-        .99: 2.576,
-        .97: 2.17,
-        .94: 1.881,
-        .93: 1.812,
-        .95: 1.96,
-        .98: 2.326,
-        .96: 2.054,
-        .92: 1.751
+        0.90: 1.645,
+        0.91: 1.695,
+        0.99: 2.576,
+        0.97: 2.17,
+        0.94: 1.881,
+        0.93: 1.812,
+        0.95: 1.96,
+        0.98: 2.326,
+        0.96: 2.054,
+        0.92: 1.751,
     }
     if confidence_level in zdict:
         z = zdict[confidence_level]
     else:
         from scipy.stats import norm
-        z = norm.ppf(1 - (alpha/2))
+
+        z = norm.ppf(1 - (alpha / 2))
     N = population_size
     M = margin_error
-    numerator = z**2 * sigma**2 * (N / (N-1))
-    denom = M**2 + ((z**2 * sigma**2)/(N-1))
-    return numerator/denom
+    numerator = z**2 * sigma**2 * (N / (N - 1))
+    denom = M**2 + ((z**2 * sigma**2) / (N - 1))
+    return numerator / denom

@@ -1,8 +1,8 @@
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
 import networkx as nx
 import osmnx as ox
 import pandas as pd
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
 
 
 def assign_community_labels(G, labels):
@@ -20,13 +20,14 @@ def assign_community_labels(G, labels):
 
 def convert_edge_weights_to_floats(G):
     """
-    OSMnx to GraphML saves edge weights as strings, this function converts them to floats
+    OSMnx to GraphML saves edge weights as str, this function converts them to floats
     :param G: NetworkX.Multidigraph
     """
     weight_attributes = nx.get_edge_attributes(G, "weight")
 
-    weight_attributes = dict([k, {"weight": float(v)}]
-                             for k, v in weight_attributes.items())
+    weight_attributes = dict(
+        [k, {"weight": float(v)}] for k, v in weight_attributes.items()
+    )
     nx.set_edge_attributes(G, weight_attributes)
     nx.get_edge_attributes(G, "weight")
 
@@ -49,7 +50,7 @@ def get_n_highest_ranked_nodes_in_community(community_df, n=10):
         community_df.loc[community_df["osmid"] == node_id, "top_n"] = i
         i += 1
 
-    ranks = [*range(1, n+1)]
+    ranks = [*range(1, n + 1)]
     # confirm top_n has been updated
     check = community_df[community_df["top_n"].isin(ranks)]
     assert len(check) == n
@@ -96,8 +97,11 @@ def get_top_n_ranked_nodes_per_community(G, community_labels):
     top_ranked_per_community = []
 
     for label in community_labels:
-        top_n_nodes = [x for x, y in G.nodes(data=True)
-                       if (y["community"] == label) & (int(y["top_n"]) in ranks)]
+        top_n_nodes = [
+            x
+            for x, y in G.nodes(data=True)
+            if (y["community"] == label) & (int(y["top_n"]) in ranks)
+        ]
         top_ranked_per_community.append({label: top_n_nodes})
 
     return top_ranked_per_community
@@ -118,9 +122,11 @@ def get_node_coordinates(G, communities_nodes):
         label = list(iter(community.keys()))[0]
         nodes = list(iter(community.values()))[0]
         for node in nodes:
-            coords_dict = {"osmid": node,
-                           "y": G.nodes[node]["y"],
-                           "x": G.nodes[node]["x"]}
+            coords_dict = {
+                "osmid": node,
+                "y": G.nodes[node]["y"],
+                "x": G.nodes[node]["x"],
+            }
             coordinates.append(coords_dict)
         node_coordinates.append({label: coordinates})
 
@@ -146,12 +152,16 @@ def find_furthest_apart_nodes(node_coordinates):
                 if j == range_end:
                     break
                 end_point = coordinates[j]
-                distance = {"u": start_point["osmid"],
-                            "v": end_point["osmid"],
-                            "dist": ox.distance.euclidean_dist_vec(y1=start_point["y"],
-                                                                   x1=start_point["x"],
-                                                                   y2=end_point["y"],
-                                                                   x2=end_point["x"])}
+                distance = {
+                    "u": start_point["osmid"],
+                    "v": end_point["osmid"],
+                    "dist": ox.distance.euclidean_dist_vec(
+                        y1=start_point["y"],
+                        x1=start_point["x"],
+                        y2=end_point["y"],
+                        x2=end_point["x"],
+                    ),
+                }
                 results.append(distance)
         # get maximum distance from results
         max_distance = max(results, key=lambda x: x["dist"])
@@ -232,13 +242,26 @@ def find_highest_weighted_simple_path(G, cutoff=90, start_node=None, end_node=No
     :return:
     """
     nodes = ox.graph_to_gdfs(G, edges=False)
-    start_node = start_node if start_node is not None else list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
-    end_node = end_node if end_node is not None else list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
+    start_node = (
+        start_node
+        if start_node is not None
+        else list(nodes[nodes["route_flag"] == "1"]["osmid"])[0]
+    )
+    end_node = (
+        end_node
+        if end_node is not None
+        else list(nodes[nodes["route_flag"] == "2"]["osmid"])[0]
+    )
 
-    highest_weighted_path = max((path for path in
-                                 nx.all_simple_paths(G, source=start_node,
-                                                     target=end_node, cutoff=cutoff)),
-                                key=lambda path: path_weight(G, path))
+    highest_weighted_path = max(
+        (
+            path
+            for path in nx.all_simple_paths(
+                G, source=start_node, target=end_node, cutoff=cutoff
+            )
+        ),
+        key=lambda path: path_weight(G, path),
+    )
     return highest_weighted_path
 
 
@@ -255,39 +278,35 @@ def plot_community_bus_routes(G):
         if "community" in y:
             y["community"] = int(y["community"])
 
-    node_colours = ox.plot.get_node_colors_by_attr(route_nodes_graph,
-                                                   attr="community",
-                                                   cmap="tab20")
+    node_colours = ox.plot.get_node_colors_by_attr(
+        route_nodes_graph, attr="community", cmap="tab20"
+    )
 
     # graph_from_gdfs creates empty nodes so need
     # to update node_colours to include those so
     # that plot graph function will work correctly
-    other_nodes = {x: (0, 0, 0, 0) for x, y in G.nodes(data=True) if x not in node_colours.index}
+    other_nodes = {
+        x: (0, 0, 0, 0) for x, y in G.nodes(data=True) if x not in node_colours.index
+    }
     series = pd.Series(other_nodes)
     node_colours = node_colours.append(series)
 
-    ox.plot_graph(route_nodes_graph, node_color=node_colours, edge_color="w", node_size=15)
+    ox.plot_graph(
+        route_nodes_graph, node_color=node_colours, edge_color="w", node_size=15
+    )
 
 
-def plot_community_graph(nodes_df,
-                         edges_df,
-                         nodes_cmap="hsv",
-                         node_size=100,
-                         legend=True):
+def plot_community_graph(
+    nodes_df, edges_df, nodes_cmap="hsv", node_size=100, legend=True
+):
     fig = plt.figure(figsize=(20, 20))
     ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
     ax.set_facecolor("black")
 
-    plt.rc("legend", fontsize=25,
-           facecolor="black")
+    plt.rc("legend", fontsize=25, facecolor="black")
 
     edges_df.plot(
-        ax=ax,
-        edgecolor="grey",
-        linewidth=1,
-        facecolor="none",
-        zorder=1,
-        alpha=0.8
+        ax=ax, edgecolor="grey", linewidth=1, facecolor="none", zorder=1, alpha=0.8
     )
 
     ax = nodes_df.plot(
@@ -298,11 +317,7 @@ def plot_community_graph(nodes_df,
         cmap=nodes_cmap,
         zorder=2,
         legend=legend,
-        categorical=True
+        categorical=True,
     )
-
-    if legend:
-        # set text colour to white
-        leg_colour = plt.setp(ax.get_legend().get_texts(), color='w')
 
     return fig, ax
