@@ -24,7 +24,23 @@ def estimate_route_cost(
     Returns:
         Cost breakdown for the route.
     """
-    raise NotImplementedError
+    total_length_m = 0.0
+    for u, v in zip(path, path[1:]):
+        edge_data = G.adj.get(u, {}).get(v, {})
+        # MultiDiGraph: edge_data is {key: attrs}; take first key (0)
+        if isinstance(edge_data, dict) and edge_data:
+            first_edge = next(iter(edge_data.values()))
+            total_length_m += float(first_edge.get("length", 0))
+
+    distance_km = total_length_m / 1000.0
+    fuel_litres = distance_km * fuel_consumption_per_km
+    cost_eur = fuel_litres * fuel_cost_per_litre
+    return RouteCost(
+        route_community=community,
+        distance_km=distance_km,
+        estimated_fuel_litres=fuel_litres,
+        estimated_cost_eur=cost_eur,
+    )
 
 
 def compare_costs(
@@ -39,4 +55,9 @@ def compare_costs(
     Returns:
         Side-by-side cost comparison.
     """
-    raise NotImplementedError
+    return CostComparison(
+        generated_routes=generated,
+        actual_routes=actual,
+        total_generated_cost=sum(r.estimated_cost_eur for r in generated),
+        total_actual_cost=sum(r.estimated_cost_eur for r in actual),
+    )
