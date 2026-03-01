@@ -27,10 +27,8 @@ def estimate_route_cost(
     total_length_m = 0.0
     for u, v in zip(path, path[1:]):
         edge_data = G.adj.get(u, {}).get(v, {})
-        # MultiDiGraph: edge_data is {key: attrs}; take first key (0)
-        if isinstance(edge_data, dict) and edge_data:
-            first_edge = next(iter(edge_data.values()))
-            total_length_m += float(first_edge.get("length", 0))
+        if edge_data:
+            total_length_m += float(edge_data.get("length", 0))
 
     distance_km = total_length_m / 1000.0
     fuel_litres = distance_km * fuel_consumption_per_km

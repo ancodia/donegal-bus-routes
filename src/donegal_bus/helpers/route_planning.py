@@ -1,4 +1,8 @@
-"""Port of route_planning/helpers/route_planning_helper.py."""
+"""Port of route_planning/helpers/route_planning_helper.py.
+
+Note: graphs loaded via graph_io.load_graphml() are DiGraph (not MultiDiGraph).
+Edge access is G.adj[u][v][attr] with no key layer.
+"""
 
 from __future__ import annotations
 
@@ -225,7 +229,10 @@ def path_weight(G: nx.MultiDiGraph, path: list[int], weight: str = "weight") -> 
     Returns:
         Total path weight.
     """
-    return sum(float(G.adj[u][v][0][weight]) for u, v in zip(path, path[1:]))
+    return sum(
+        float(G.adj[u][v][weight])  # type: ignore[index]
+        for u, v in zip(path, path[1:])
+    )
 
 
 def find_highest_weighted_simple_path(
@@ -253,8 +260,8 @@ def find_highest_weighted_simple_path(
         end_node = next(
             n for n, d in G.nodes(data=True) if str(d.get("route_flag")) == "2"
         )
-    highest_weighted_path = max(
+    result = max(
         nx.all_simple_paths(G, source=start_node, target=end_node, cutoff=cutoff),
-        key=lambda p: path_weight(G, p),
+        key=lambda p: path_weight(G, p),  # type: ignore[arg-type]
     )
-    return highest_weighted_path
+    return [int(n) for n in result]  # type: ignore[arg-type]

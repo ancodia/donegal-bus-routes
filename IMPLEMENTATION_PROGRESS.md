@@ -30,8 +30,16 @@ Plan: `/home/danny/.claude/plans/functional-cooking-mist.md`
 - GeoJSON coordinate order: `[x, y]` = `[lng, lat]`
 - `community_route_order` is stored as `"0-0"`, `"1-1"` etc (not plain int) in some graph files
 
+## COMPLETED ✅
+All 48 stubs implemented, 17 offline stubs have detailed TODO comments.
+All endpoints verified working. ruff + pyright: 0 errors.
+
+## Key Bug Fixed During Implementation
+- `nx.read_graphml` returns **DiGraph** (not MultiDiGraph) after `relabel_nodes`.
+  `G.adj[u][v]` gives edge attrs directly — NO `[0]` key layer needed.
+  Fixed in: `analysis/cost.py`, `helpers/route_planning.py`, `helpers/testing.py`
+
 ## If Resuming
-Next step: run `ruff check src/` and `pyright src/` to verify linting, then start server and hit endpoints.
 
 ## Verification Commands
 ```bash
