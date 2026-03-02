@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Notebooks & scratch
+app/
+*.ipynb
+*.ipynb_checkpoints/
+
+# Data (mounted as volumes at runtime)
+graph/
+testing/
+data/
+route_planning/
+
+# Web build artefacts
+web/node_modules/
+web/dist/
+
+# Dev tooling
+.git/
+.github/
+.pre-commit-config.yaml
+*.md
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
