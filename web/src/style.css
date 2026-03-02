@@ -497,6 +497,79 @@ body {
   margin-top: 0.25rem;
 }
 
+/* ── Step dynamic fade-in (polish) ──────────────────────────────────────── */
+
+.step-dynamic {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Nearest stop finder (step 9) ────────────────────────────────────────── */
+
+.finder-instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.finder-result-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #166534;
+  margin-bottom: 0.35rem;
+}
+
+/* ── Leaflet popup content ───────────────────────────────────────────────── */
+
+.nearest-popup {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 0.8rem;
+  min-width: 160px;
+}
+
+.popup-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.popup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.2rem 0;
+}
+
+.popup-row.popup-highlight {
+  font-weight: 700;
+  color: #166534;
+  margin-top: 0.15rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.popup-label {
+  color: #64748b;
+}
+
+.popup-value {
+  font-weight: 600;
+  color: #1e293b;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+}
+
 /* ── Responsive: narrow sidebar on small screens ────────────────────────── */
 
 @media (max-width: 640px) {
