@@ -2,7 +2,7 @@
  * Sidebar DOM rendering helpers.
  */
 
-import type { PipelineStep } from './steps/index.ts';
+import type { PipelineStep } from './steps/types.ts';
 
 export function initSidebar(steps: PipelineStep[], onStepSelect: (id: number) => void): void {
   renderStepNav(steps, onStepSelect);
@@ -31,6 +31,23 @@ export function setActiveStep(id: number): void {
   for (const btn of nav.querySelectorAll<HTMLButtonElement>('.step-btn')) {
     btn.classList.toggle('active', btn.textContent === String(id));
   }
+}
+
+/**
+ * Render a step's title and narrative into the sidebar, then return the
+ * dynamic container that the step's onEnter should populate.
+ */
+export function renderStep(step: PipelineStep): HTMLElement {
+  const content = document.getElementById('sidebar-content');
+  if (!content) throw new Error('sidebar-content element not found');
+
+  content.innerHTML = `
+    <h2 class="step-title">${step.title}</h2>
+    <div class="step-narrative">${step.narrativeHtml}</div>
+    <div class="step-dynamic" id="step-dynamic"></div>
+  `;
+
+  return document.getElementById('step-dynamic') as HTMLElement;
 }
 
 export function setContent(html: string): void {

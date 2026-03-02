@@ -1,19 +1,14 @@
 /**
  * Pipeline step definitions.
  *
- * Each step corresponds to a stage in the dissertation pipeline.
- * Steps are added incrementally across implementation phases.
- * Phase 2 will add steps 0–1; Phase 3 will add steps 2–3, etc.
+ * Steps are registered here and added incrementally across implementation phases.
+ * Phase 2: steps 0–1 (Introduction, Road Network)
  */
 
-import type L from 'leaflet';
+export type { PipelineStep } from './types.ts';
 
-export interface PipelineStep {
-  id: number;
-  title: string;
-  narrativeHtml: string;
-  onEnter: (map: L.Map, sidebar: HTMLElement) => Promise<void>;
-  onExit: (map: L.Map) => void;
-}
+import type { PipelineStep } from './types.ts';
+import step0 from './step0-intro.ts';
+import step1 from './step1-network.ts';
 
-export const steps: PipelineStep[] = [];
+export const steps: PipelineStep[] = [step0, step1];
