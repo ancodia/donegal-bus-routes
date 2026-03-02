@@ -16,11 +16,20 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
 
-# ── Install dependencies (cached layer — only invalidated when lock changes) ───
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-cache
+# ── Make the src layout visible to Python ─────────────────────────────────────
+# pyproject.toml has no [build-system] table, so uv treats the project as
+# virtual and never installs donegal_bus as a package. Setting PYTHONPATH
+# directly is the reliable alternative for a src layout in Docker.
+ENV PYTHONPATH=/app/src
 
-# ── Copy application source ────────────────────────────────────────────────────
+# ── Install third-party dependencies (cached layer) ───────────────────────────
+# Copying only the lock files first means this layer is only invalidated when
+# dependencies change, not on every source edit. --no-install-project skips
+# trying (and silently failing) to install the project package itself.
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-cache --no-install-project
+
+# ── Copy application source ───────────────────────────────────────────────────
 COPY src/ ./src/
 COPY main.py ./
 
