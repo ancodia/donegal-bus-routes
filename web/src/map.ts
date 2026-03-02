@@ -15,6 +15,16 @@ const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors ' +
   '&copy; <a href="https://carto.com/attributions">CARTO</a>';
 
+const BOUNDARY_STYLE: L.PathOptions = {
+  color: '#1a3557',
+  weight: 2,
+  opacity: 0.45,
+  fillColor: '#1a3557',
+  fillOpacity: 0.04,
+  dashArray: '6 4',
+  interactive: false,
+};
+
 let _map: L.Map | null = null;
 const _layers = new Map<string, L.Layer>();
 
@@ -27,7 +37,20 @@ export function initMap(containerId: string): L.Map {
     maxZoom: 20,
   }).addTo(_map);
 
+  initBoundary(_map).catch((err: unknown) => {
+    console.warn('[map] boundary overlay unavailable:', err);
+  });
+
   return _map;
+}
+
+async function initBoundary(map: L.Map): Promise<void> {
+  const res = await fetch('/donegal-boundary.geojson');
+  if (!res.ok) throw new Error(`fetch /donegal-boundary.geojson → HTTP ${res.status}`);
+  const geojson = (await res.json()) as GeoJSON.GeoJsonObject;
+  L.geoJSON(geojson, { style: () => BOUNDARY_STYLE, interactive: false })
+    .addTo(map)
+    .bringToBack();
 }
 
 export function getMap(): L.Map {
