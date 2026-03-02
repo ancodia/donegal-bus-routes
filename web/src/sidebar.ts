@@ -25,11 +25,23 @@ export function renderStepNav(steps: PipelineStep[], onStepSelect: (id: number) 
   }
 }
 
-export function setActiveStep(id: number): void {
+export function setActiveStep(id: number, title?: string): void {
   const nav = document.getElementById('step-nav');
   if (!nav) return;
+
   for (const btn of nav.querySelectorAll<HTMLButtonElement>('.step-btn')) {
     btn.classList.toggle('active', btn.textContent === String(id));
+  }
+
+  const label = document.getElementById('step-label');
+  if (label) {
+    if (title) {
+      label.textContent = `Step ${id} · ${title}`;
+      label.classList.add('visible');
+    } else {
+      label.textContent = '';
+      label.classList.remove('visible');
+    }
   }
 }
 

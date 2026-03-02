@@ -26,9 +26,12 @@ async function onStepSelect(id: number): Promise<void> {
   if (_currentStep) _currentStep.onExit(map);
   _currentStep = step;
 
-  setActiveStep(id);
+  setActiveStep(id, step.title);
   const dynamic = renderStep(step);
   await step.onEnter(map, dynamic);
+
+  // On mobile, open the sidebar automatically when a step is selected.
+  document.getElementById('sidebar')?.classList.add('sidebar-open');
 }
 
 async function bootstrap(): Promise<void> {
@@ -36,17 +39,26 @@ async function bootstrap(): Promise<void> {
   initSidebar(steps, (id) => void onStepSelect(id));
 
   setContent(`
-    <h2 style="font-size:1rem;font-weight:600;margin-bottom:.5rem;">
-      Rural Bus Route Planning
-    </h2>
-    <p style="color:#475569;line-height:1.6;">
-      A GIS pipeline for generating optimised rural bus routes in County Donegal,
-      built on community detection and population-weighted graph analysis.
-    </p>
-    <p style="color:#94a3b8;font-size:.8rem;margin-top:.75rem;">
-      Use the step navigator above to walk through the pipeline.
-    </p>
+    <div class="welcome-card">
+      <h2 class="welcome-title">Rural Bus Route Planning</h2>
+      <p class="welcome-body">
+        A GIS pipeline for generating optimised rural bus routes in County
+        Donegal, built on community detection and population-weighted graph
+        analysis.
+      </p>
+      <p class="welcome-hint">
+        Use the step navigator above to walk through the pipeline.
+      </p>
+    </div>
   `);
+
+  // Print button
+  document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+
+  // Mobile sidebar toggle
+  document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('sidebar-open');
+  });
 
   try {
     const health = await fetchHealth();
