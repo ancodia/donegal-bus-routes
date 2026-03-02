@@ -428,6 +428,75 @@ body {
   line-height: 1;
 }
 
+/* ── Inline legend swatch (step 6 narrative) ─────────────────────────────── */
+
+.legend-swatch {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
+/* ── Stats table ─────────────────────────────────────────────────────────── */
+
+.stats-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stats-table.compact .stats-row {
+  padding: 0.3rem 0.65rem;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.78rem;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 0.5rem;
+}
+
+.stats-row:last-child {
+  border-bottom: none;
+}
+
+.stats-row.highlight {
+  background: #eff6ff;
+  font-weight: 600;
+}
+
+.stats-label {
+  color: #64748b;
+  flex: 1;
+  min-width: 0;
+}
+
+.stats-value {
+  color: #1e293b;
+  font-weight: 600;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+}
+
+/* ── Chart title ─────────────────────────────────────────────────────────── */
+
+.chart-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
 /* ── Responsive: narrow sidebar on small screens ────────────────────────── */
 
 @media (max-width: 640px) {
