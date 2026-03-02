@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     testing_graphml_path: Path = Path("testing/graphml")
     testing_data_path: Path = Path("testing/data")
 
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:8080",
+    ]
+
     model_config = {"env_file": ".env", "env_prefix": "DONEGAL_"}
 
     # ── Derived paths ───────────────────────────────────────────

@@ -7,6 +7,7 @@ from networkx import MultiDiGraph
 
 from donegal_bus.api.dependencies import get_routes_graph
 from donegal_bus.models.community import Community, CommunityCollection, CommunityDetail
+from donegal_bus.models.error import ErrorResponse
 
 router = APIRouter()
 
@@ -34,7 +35,7 @@ def list_communities(
     return CommunityCollection(communities=communities, total=len(communities))
 
 
-@router.get("/{label}")
+@router.get("/{label}", responses={404: {"model": ErrorResponse}})
 def get_community(
     label: int,
     G: MultiDiGraph = Depends(get_routes_graph),

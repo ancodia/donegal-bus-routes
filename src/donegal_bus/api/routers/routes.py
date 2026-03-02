@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from networkx import MultiDiGraph
 
 from donegal_bus.api.dependencies import get_routes_graph
+from donegal_bus.models.error import ErrorResponse
 from donegal_bus.models.geojson import Feature, FeatureCollection, LineStringGeometry
 from donegal_bus.models.route import RouteCollection, RouteDetail, RouteStop
 
@@ -77,7 +78,7 @@ def routes_geojson(
     return FeatureCollection(features=features)
 
 
-@router.get("/community/{label}")
+@router.get("/community/{label}", responses={404: {"model": ErrorResponse}})
 def routes_by_community(
     label: int,
     G: MultiDiGraph = Depends(get_routes_graph),
@@ -91,7 +92,7 @@ def routes_by_community(
     return _route_detail_from_nodes(label, routes_by_community_map[label])
 
 
-@router.get("/connection/{label}")
+@router.get("/connection/{label}", responses={404: {"model": ErrorResponse}})
 def connection_route(
     label: str,
     G: MultiDiGraph = Depends(get_routes_graph),

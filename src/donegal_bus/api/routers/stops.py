@@ -66,11 +66,13 @@ def nearest_stop(
         stops,
         key=lambda nd: math.hypot(float(nd[1]["x"]) - lng, float(nd[1]["y"]) - lat),
     )
+    dist = math.hypot(float(nearest_data["x"]) - lng, float(nearest_data["y"]) - lat)
     geom = PointGeometry(
         coordinates=(float(nearest_data["x"]), float(nearest_data["y"]))
     )
     props: dict[str, str | int | float | bool | None] = {
         "osmid": int(nearest_data.get("osmid", nearest_node)),
         "community": int(nearest_data.get("community", 0)),
+        "distance_deg": round(dist, 6),
     }
     return FeatureCollection(features=[Feature(geometry=geom, properties=props)])

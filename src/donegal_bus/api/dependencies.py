@@ -6,6 +6,7 @@ import networkx as nx
 
 from donegal_bus.config import Settings
 from donegal_bus.graph_io import fix_bool_attributes, fix_edge_weights, load_graphml
+from donegal_bus.models.analysis import AccessibilitySummary
 
 
 @lru_cache
@@ -16,6 +17,7 @@ def get_settings() -> Settings:
 
 _road_network: nx.MultiDiGraph | None = None
 _routes_graph: nx.MultiDiGraph | None = None
+_accessibility_cache: AccessibilitySummary | None = None
 
 
 def load_graphs() -> None:
@@ -49,3 +51,14 @@ def get_routes_graph() -> nx.MultiDiGraph:
     if _routes_graph is None:
         raise RuntimeError("Routes graph not loaded — is the app started?")
     return _routes_graph
+
+
+def get_cached_accessibility() -> AccessibilitySummary | None:
+    """Return the cached accessibility summary, or None if not yet computed."""
+    return _accessibility_cache
+
+
+def set_cached_accessibility(summary: AccessibilitySummary) -> None:
+    """Store the accessibility summary in the module-level cache."""
+    global _accessibility_cache
+    _accessibility_cache = summary

@@ -12,7 +12,12 @@ from donegal_bus.analysis.accessibility import (
 )
 from donegal_bus.analysis.cost import compare_costs, estimate_route_cost
 from donegal_bus.analysis.sampling import cochran_sample_size, select_sample_nodes
-from donegal_bus.api.dependencies import get_routes_graph, get_settings
+from donegal_bus.api.dependencies import (
+    get_cached_accessibility,
+    get_routes_graph,
+    get_settings,
+    set_cached_accessibility,
+)
 from donegal_bus.models.analysis import AccessibilitySummary, CostComparison
 from donegal_bus.models.population import PopulationSummary
 
@@ -24,6 +29,10 @@ def accessibility_summary(
     G: MultiDiGraph = Depends(get_routes_graph),
 ) -> AccessibilitySummary:
     """Return accessibility test results across sampled nodes."""
+    cached = get_cached_accessibility()
+    if cached is not None:
+        return cached
+
     # Generated stop nodes are the destinations
     destinations = [
         int(data.get("osmid", node))
@@ -34,7 +43,9 @@ def accessibility_summary(
     sample_size = cochran_sample_size(G.number_of_nodes(), confidence_level=0.95)
     sample_nodes = select_sample_nodes(G, sample_size)
     results = run_accessibility_tests(G, sample_nodes, destinations)
-    return summarize_results(results)
+    summary = summarize_results(results)
+    set_cached_accessibility(summary)
+    return summary
 
 
 @router.get("/cost")
