@@ -15,6 +15,14 @@ const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors ' +
   '&copy; <a href="https://carto.com/attributions">CARTO</a>';
 
+const MASK_STYLE: L.PathOptions = {
+  color: 'transparent',
+  weight: 0,
+  fillColor: '#1a3557',
+  fillOpacity: 0.15,
+  interactive: false,
+};
+
 const BOUNDARY_STYLE: L.PathOptions = {
   color: '#1a3557',
   weight: 2,
@@ -37,6 +45,9 @@ export function initMap(containerId: string): L.Map {
     maxZoom: 20,
   }).addTo(_map);
 
+  initMask(_map).catch((err: unknown) => {
+    console.warn('[map] mask overlay unavailable:', err);
+  });
   initBoundary(_map).catch((err: unknown) => {
     console.warn('[map] boundary overlay unavailable:', err);
   });
@@ -44,13 +55,20 @@ export function initMap(containerId: string): L.Map {
   return _map;
 }
 
+async function initMask(map: L.Map): Promise<void> {
+  const res = await fetch('/donegal-mask.geojson');
+  if (!res.ok) throw new Error(`fetch /donegal-mask.geojson → HTTP ${res.status}`);
+  const geojson = (await res.json()) as GeoJSON.GeoJsonObject;
+  L.geoJSON(geojson, { style: () => MASK_STYLE, interactive: false })
+    .addTo(map)
+    .bringToBack();
+}
+
 async function initBoundary(map: L.Map): Promise<void> {
   const res = await fetch('/donegal-boundary.geojson');
   if (!res.ok) throw new Error(`fetch /donegal-boundary.geojson → HTTP ${res.status}`);
   const geojson = (await res.json()) as GeoJSON.GeoJsonObject;
-  L.geoJSON(geojson, { style: () => BOUNDARY_STYLE, interactive: false })
-    .addTo(map)
-    .bringToBack();
+  L.geoJSON(geojson, { style: () => BOUNDARY_STYLE, interactive: false }).addTo(map);
 }
 
 export function getMap(): L.Map {
