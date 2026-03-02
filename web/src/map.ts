@@ -59,6 +59,13 @@ export function clearLayers(): void {
   _layers.clear();
 }
 
+export function addLayerGroup(id: string, layers: L.Layer[]): L.LayerGroup {
+  removeLayer(id);
+  const group = L.layerGroup(layers).addTo(getMap());
+  _layers.set(id, group);
+  return group;
+}
+
 export function fitBoundsToLayer(id: string): void {
   const layer = _layers.get(id);
   if (layer && layer instanceof L.GeoJSON) {
